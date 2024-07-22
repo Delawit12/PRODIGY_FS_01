@@ -1,19 +1,30 @@
-const User =require("../models/userModel.js") ;
-const bcrypt =require("bcrypt") ;
-const { JWT_SECRET } =require( "../config/secrets.js");
-const jwt =require( "jsonwebtoken");
-const Email =require( "../utils/email.js");
+const User = require("../models/userModel.js");
+const bcrypt = require("bcrypt");
+const { JWT_SECRET } = require("../config/secrets.js");
+const jwt = require("jsonwebtoken");
+const Email = require("../utils/email.js");
 // const crypto =require("crypto");
 const authController = {
   signup: async (req, res, next) => {
     console.log(req.body);
     try {
-      const { name, email, password, passwordConfirm } = req.body;
+      const {
+        firstname,
+        lastname,
+        username,
+        email,
+        password,
+        phoneNumber,
+        address,
+      } = req.body;
       const newUser = await User.create({
-        name: name,
+        firstname: firstname,
+        lastname: lastname,
+        username: username,
         email: email,
+        phoneNumber: phoneNumber,
+        address: address,
         password: password,
-        passwordConfirm: passwordConfirm,
       });
       res.status(200).json({
         status: "success",

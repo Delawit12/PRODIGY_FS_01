@@ -171,24 +171,3 @@
   background-color: rgba(0, 255, 0, 0.5); /* Green */
 }
 /* home.css */
-
-.logo-container {
-  position: relative;
-  display: inline-block;
-}
-
-.logo-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3); /* Light dark overlay */
-  border-radius: 50%; /* Ensure it covers the logo in a circular shape */
-  z-index: 1; /* Ensure the overlay is above the logo */
-}
-
-.logo-img {
-  position: relative;
-  z-index: 0; /* Ensure the logo image is below the overlay */
-}

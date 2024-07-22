@@ -1,10 +1,18 @@
-const mongoose =require( "mongoose");
-const validator =require( "validator");
-const bcrypt =require( "bcrypt");
-const crypto =require( "crypto");
+const mongoose = require("mongoose");
+const validator = require("validator");
+const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema({
-  name: {
+  firstname: {
+    type: String,
+    required: [true, "your name is required"],
+  },
+  lastname: {
+    type: String,
+    required: [true, "your name is required"],
+  },
+  username: {
     type: String,
     required: [true, "your name is required"],
   },
@@ -15,6 +23,7 @@ const userSchema = new mongoose.Schema({
     lowerCase: true,
     validate: [validator.isEmail, "Please provide a valid Email Address"],
   },
+  phoneNumber: String,
   password: {
     type: String,
     required: [true, "password is required"],
@@ -30,18 +39,6 @@ const userSchema = new mongoose.Schema({
         "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
     },
     select: false,
-  },
-
-  passwordConfirm: {
-    type: String,
-    required: [true, "please confirm your password"],
-    validate: {
-      //confirm password
-      validator: function (el) {
-        return el === this.password;
-      },
-      message: "Passwords are not the same!",
-    },
   },
   role: {
     type: String,

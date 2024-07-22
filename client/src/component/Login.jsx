@@ -1,6 +1,5 @@
 import { useState } from "react";
 import loginImage from "../../public/Mobile login-cuate.svg"; // Replace with your actual image path
-import "./signup.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,7 +18,7 @@ const Login = () => {
           <div className="mb-8 text-center">
             <h1 className="my-3 text-4xl font-bold text-green-700">Login</h1>
             <p className="text-sm text-gray-300">
-              Log in to access your account
+              Login to access your account
             </p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -48,10 +47,10 @@ const Login = () => {
                     Password
                   </label>
                   <a
-                    href="#"
+                    href="/forgetPassword"
                     className="text-xs  text-gray-400 hover:underline"
                   >
-                    Forgot password?
+                    Forget password?
                   </a>
                 </div>
                 <input
@@ -70,9 +69,9 @@ const Login = () => {
               <div>
                 <button
                   type="submit"
-                  className="w-full px-8 py-3 font-semibold rounded-md bg-green-800 text-gray-300"
+                  className="w-full px-8 py-3 font-semibold rounded-md bg-green-700 hover:bg-green-800 text-gray-300"
                 >
-                  Log in
+                  LOGIN
                 </button>
               </div>
               <p className="text-sm text-gray-400">
