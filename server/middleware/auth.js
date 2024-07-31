@@ -1,5 +1,5 @@
-const jwt =require( "jsonwebtoken");
-const { JWT_SECRET } =require( "../config/secrets.js");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config/secrets.js");
 
 const auth = (req, res, next) => {
   try {
@@ -20,6 +20,7 @@ const auth = (req, res, next) => {
     req.body.id = verified.id;
     req.body.email = verified.email;
     req.role = verified.role;
+    console.log(req.role, "....");
 
     next();
   } catch (err) {

@@ -1,19 +1,52 @@
 import { useState } from "react";
 import loginImage from "../../public/Mobile login-cuate.svg"; // Replace with your actual image path
+import axios from "axios"; // Import axios for making API calls
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(""); // State to handle errors
+  const [loading, setLoading] = useState(false); // State to handle loading
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your login logic here
-    console.log("Logging in with:", email, password);
+    setLoading(true); // Set loading to true before making the API call
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8888/api/user/login",
+        {
+          email,
+          password,
+        }
+      );
+
+      // Handle the successful login response
+      console.log("Login successful:", response.data);
+      console.log(response.data);
+      setLoading(false);
+      if (response.status === 200) {
+        const { token, user } = response.data;
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+      } else {
+        console.error(response.data.message);
+      }
+      window.location.href = "/profile";
+    } catch (error) {
+      setLoading(false);
+      // Handle errors
+      if (error.response && error.response.data) {
+        setError(error.response.data.message);
+      } else {
+        setError("An error occurred while logging in. Please try again.");
+      }
+    }
   };
 
   return (
     <div className="flex items-center justify-center bg-black">
-      <div className="flex flex-wrap md:flex-row w-full max-w-6xl p-16 mx-auto overflow-hidden rounded-lg shadow-lg bg-green-600 md:bg-transparent text-white">
+      <div className="flex flex-wrap md:flex-row w-full max-w-6xl p-16 mx-auto overflow-hidden rounded-lg shadow-lg  text-white">
         <div className="md:w-1/2 p-8 md:p-12">
           <div className="mb-8 text-center">
             <h1 className="my-3 text-4xl font-bold text-green-700">Login</h1>
@@ -48,7 +81,7 @@ const Login = () => {
                   </label>
                   <a
                     href="/forgetPassword"
-                    className="text-xs  text-gray-400 hover:underline"
+                    className="text-xs text-gray-400 hover:underline"
                   >
                     Forget password?
                   </a>
@@ -65,13 +98,17 @@ const Login = () => {
                 />
               </div>
             </div>
+            {error && (
+              <p className="text-red-500 text-sm">{error}</p> // Display error message
+            )}
             <div className="space-y-2">
               <div>
                 <button
                   type="submit"
                   className="w-full px-8 py-3 font-semibold rounded-md bg-green-700 hover:bg-green-800 text-gray-300"
+                  disabled={loading} // Disable the button while loading
                 >
-                  LOGIN
+                  {loading ? "Logging in..." : "LOGIN"}
                 </button>
               </div>
               <p className="text-sm text-gray-400">

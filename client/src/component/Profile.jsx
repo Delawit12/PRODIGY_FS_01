@@ -1,46 +1,21 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import profileImg from "../../public/images.png";
-import {
-  faUser,
-  faPhone,
-  faCalendar,
-  faMapMarkerAlt,
-  faBriefcase,
-  faCalendarDay,
-  faGlobe,
-  faPen,
-} from "@fortawesome/free-solid-svg-icons";
+import { faUser, faPhone, faInbox } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Header from "./Header";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      setUserData({
-        firstName: "John",
-        lastName: "Doe",
-        gender: "Male",
-        phone: "+1234567890",
-        age: 30,
-        birthdate: "1994-01-01",
-        birthplace: "New York",
-        workStatus: "Employed",
-        address: "123 Main St, New York, NY",
-        createdDate: "2024-01-01",
-        profilePicture: "", // Add profile picture URL here
-      });
+    const fetchUsers = async () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      setUserData(user);
     };
 
-    fetchData();
+    fetchUsers();
   }, []);
-
-  const handleEditProfile = () => {
-    navigate("/edit-profile"); // Redirect to edit profile page
-  };
 
   return (
     <div className="flex flex-col bg-black text-white">
@@ -54,15 +29,8 @@ const Profile = () => {
               className="w-32 h-32 object-cover rounded-full mb-4 border-4 border-green-300"
             />
             <h1 className="text-4xl font-bold text-green-600 mb-4">
-              {userData?.firstName} {userData?.lastName}
+              {userData?.username}
             </h1>
-            <button
-              onClick={handleEditProfile}
-              className="absolute top-1 right-1 p-2 bg-gray-700 rounded-full border-2 border-green-600 text-green-600 hover:bg-gray-800"
-              aria-label="Edit Profile"
-            >
-              <FontAwesomeIcon icon={faPen} className="w-5 h-5" />
-            </button>
           </div>
           {userData ? (
             <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -75,7 +43,9 @@ const Profile = () => {
                   <p className="text-lg font-semibold text-gray-300">
                     First Name:
                   </p>
-                  <p className="text-sm text-gray-400">{userData.firstName}</p>
+                  <p className="text-lg uppercase text-gray-400">
+                    {userData.firstname}
+                  </p>
                 </div>
               </div>
               <div className="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center space-x-4">
@@ -87,43 +57,24 @@ const Profile = () => {
                   <p className="text-lg font-semibold text-gray-300">
                     Last Name:
                   </p>
-                  <p className="text-sm text-gray-400">{userData.lastName}</p>
+                  <p className="text-lg uppercase text-gray-400">
+                    {userData.lastname}
+                  </p>
                 </div>
               </div>
               <div className="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center space-x-4">
                 <FontAwesomeIcon
-                  icon={faCalendar}
-                  className="w-6 h-6 text-gray-300"
-                />
-                <div className="flex-grow flex justify-between">
-                  <p className="text-lg font-semibold text-gray-300">Age:</p>
-                  <p className="text-sm text-gray-400">{userData.age}</p>
-                </div>
-              </div>
-              <div className="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center space-x-4">
-                <FontAwesomeIcon
-                  icon={faCalendarDay}
+                  icon={faUser}
                   className="w-6 h-6 text-gray-300"
                 />
                 <div className="flex-grow flex justify-between">
                   <p className="text-lg font-semibold text-gray-300">
-                    Birthdate:
+                    username:
                   </p>
-                  <p className="text-sm text-gray-400">{userData.birthdate}</p>
+                  <p className="text-sm text-gray-400">{userData.username}</p>
                 </div>
               </div>
-              <div className="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center space-x-4">
-                <FontAwesomeIcon
-                  icon={faGlobe}
-                  className="w-6 h-6 text-gray-300"
-                />
-                <div className="flex-grow flex justify-between">
-                  <p className="text-lg font-semibold text-gray-300">
-                    Birthplace:
-                  </p>
-                  <p className="text-sm text-gray-400">{userData.birthplace}</p>
-                </div>
-              </div>
+
               <div className="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center space-x-4">
                 <FontAwesomeIcon
                   icon={faPhone}
@@ -131,31 +82,19 @@ const Profile = () => {
                 />
                 <div className="flex-grow flex justify-between">
                   <p className="text-lg font-semibold text-gray-300">Phone:</p>
-                  <p className="text-sm text-gray-400">{userData.phone}</p>
+                  <p className="text-sm text-gray-400">
+                    {userData.phoneNumber}
+                  </p>
                 </div>
               </div>
               <div className="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center space-x-4">
                 <FontAwesomeIcon
-                  icon={faBriefcase}
+                  icon={faInbox}
                   className="w-6 h-6 text-gray-300"
                 />
                 <div className="flex-grow flex justify-between">
-                  <p className="text-lg font-semibold text-gray-300">
-                    Work Status:
-                  </p>
-                  <p className="text-sm text-gray-400">{userData.workStatus}</p>
-                </div>
-              </div>
-              <div className="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center space-x-4">
-                <FontAwesomeIcon
-                  icon={faMapMarkerAlt}
-                  className="w-6 h-6 text-gray-300"
-                />
-                <div className="flex-grow flex justify-between">
-                  <p className="text-lg font-semibold text-gray-300">
-                    Address:
-                  </p>
-                  <p className="text-sm text-gray-400">{userData.address}</p>
+                  <p className="text-lg font-semibold text-gray-300">Email:</p>
+                  <p className="text-sm text-gray-400">{userData.email}</p>
                 </div>
               </div>
             </div>

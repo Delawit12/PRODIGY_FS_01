@@ -1,7 +1,7 @@
 const isAdmin = (req, res, next) => {
   try {
     const role = req.role;
-
+    console.log(role);
     //  not an admin
     if (role != "admin") {
       return res.status(403).json({
@@ -23,4 +23,4 @@ const isAdmin = (req, res, next) => {
   }
 };
 
-module.exports  = isAdmin;
+module.exports = isAdmin;

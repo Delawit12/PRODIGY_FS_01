@@ -1,12 +1,35 @@
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import forgetPasswordImg from "../../public/Forgot password-pana.svg";
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate(); // Initialize navigate
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement password recovery logic here, e.g., sending an email
+    try {
+      const response = await axios.post(
+        "http://localhost:8888/api/user/forgetPassword",
+        { email }
+      );
+      if (response.status === 200) {
+        setMessage("OTP sent to email!");
+        setError("");
+        // Navigate to OTP verification page with email as state
+        navigate("/getOtp", { state: { email } });
+      } else {
+        setError("Error sending OTP. Please try again.");
+        setMessage("");
+      }
+    } catch (err) {
+      console.error("An error occurred during password recovery:", err);
+      setError("An error occurred. Please try again later.");
+      setMessage("");
+    }
   };
 
   return (
@@ -28,7 +51,7 @@ const ForgetPassword = () => {
           </p>
           <form onSubmit={handleSubmit} className="space-y-4 w-full">
             <div className="space-y-1 text-sm mb-6">
-              <label htmlFor="email" className="block text-left  text-gray-400">
+              <label htmlFor="email" className="block text-left text-gray-400">
                 Email
               </label>
               <input
@@ -42,10 +65,11 @@ const ForgetPassword = () => {
                 required
               />
             </div>
+            {message && <p className="text-green-500">{message}</p>}
+            {error && <p className="text-red-500">{error}</p>}
             <button
               type="submit"
-              className="block w-full p-3
-               text-center rounded-full text-gray-300 bg-green-700 hover:bg-green-800"
+              className="block w-full p-3 text-center rounded-full text-gray-300 bg-green-700 hover:bg-green-800"
             >
               Get OTP
             </button>

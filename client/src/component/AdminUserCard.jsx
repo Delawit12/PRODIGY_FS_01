@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import profileImg from "../../public/images.png";
 
 const AdminUserCard = ({ user, onEdit, onDelete }) => {
   return (

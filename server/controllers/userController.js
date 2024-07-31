@@ -61,7 +61,7 @@ const userController = {
         },
       });
     } catch (error) {
-      console.log("Error in updating user:", error);
+      console.log("Error in deleting user:", error);
       return res.status(500).json({
         status: "Failed",
         message: "An error occurred while updating user",
@@ -76,9 +76,8 @@ const userController = {
       return res.status(200).json({
         status: "success",
         size: users.length,
-        data: {
-          users: users,
-        },
+
+        users: users,
       });
     } catch (error) {
       console.log("Error in fetching users:", error);

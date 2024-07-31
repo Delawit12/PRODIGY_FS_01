@@ -1,19 +1,36 @@
 import { useState } from "react";
 import newPasswordImg from "../../public/Reset password-cuate (1).svg";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const NewPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const email = location.state?.email;
+  const otp = location.state?.otp;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setError("Passwords do not match");
-    } else {
-      setError("");
-      // Implement password update logic here
-      // On successful password update, redirect to login page or show a success message
+      return;
+    }
+    try {
+      const response = await axios.put(
+        "http://localhost:8888/api/user/resetPassword",
+        { email, otp, password, passwordConfirm: confirmPassword }
+      );
+      if (response.status === 200) {
+        navigate("/login"); // Redirect to login page
+      } else {
+        setError(response.data.message || "Error resetting password");
+      }
+    } catch (err) {
+      console.error("An error occurred during password reset:", err);
+      setError("An error occurred. Please try again later.");
     }
   };
 
@@ -24,7 +41,7 @@ const NewPassword = () => {
           <h1 className="text-4xl font-bold text-center text-green-700 mb-5">
             Reset Password
           </h1>
-          <form onSubmit={handleSubmit} className="space-y-4  w-full p-2">
+          <form onSubmit={handleSubmit} className="space-y-4 w-full p-2">
             <div className="space-y-1 text-sm">
               <label
                 htmlFor="password"
@@ -64,7 +81,7 @@ const NewPassword = () => {
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <button
               type="submit"
-              className="block w-11/12  p-2 mx-auto text-center rounded-full text-gray-300 bg-green-700 hover:bg-green-700 "
+              className="block w-11/12 p-2 mx-auto text-center rounded-full text-gray-300 bg-green-700 hover:bg-green-700"
             >
               Update Password
             </button>

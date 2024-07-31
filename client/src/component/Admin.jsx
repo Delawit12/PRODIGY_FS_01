@@ -1,39 +1,49 @@
+// Admin.js
 import { useState, useEffect } from "react";
 import Header from "./Header";
 import UserDetailPopup from "./UserDetailPopup";
+import EditRolePopup from "./EditRolePopup"; // Import EditRolePopup
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Import FontAwesome icons
+import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [editingUser, setEditingUser] = useState(null); // State for user being edited
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8; // Define how many users per page
 
-  // Mock fetch users data
+  // Fetch users data
   useEffect(() => {
     const fetchUsers = async () => {
-      setUsers([
-        // Your mock users data
-        {
-          id: 1,
-          firstName: "John",
-          lastName: "Doe",
-          email: "john.doe@example.com",
-          phone: "+1234567890",
-          role: "User",
-          profilePic: "../../public/images.png", // add profile pic path
-        },
-        {
-          id: 2,
-          firstName: "Jane",
-          lastName: "Smith",
-          email: "jane.smith@example.com",
-          phone: "+0987654321",
-          role: "Admin",
-          profilePic: "../../public/images.png", // add profile pic path
-        },
-        // Add more mock users here...
-      ]);
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!token || user.role !== "admin") {
+        Navigate("/login"); // Redirect to login if not authorized
+        return;
+      }
+      try {
+        const response = await axios.get(
+          "http://localhost:8888/api/user/getAllUser",
+          {
+            headers: {
+              authorization: `${token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          setUsers(response.data.users);
+        } else {
+          console.error(response.data.message);
+        }
+      } catch (error) {
+        console.error(
+          "Error fetching users:",
+          error.response ? error.response.data : error.message
+        );
+      }
     };
 
     fetchUsers();
@@ -45,16 +55,48 @@ const Admin = () => {
 
   const handleClosePopup = () => {
     setSelectedUser(null);
+    setEditingUser(null);
   };
 
-  const handleEditUser = (id) => {
-    console.log(`Edit user with ID: ${id}`);
-    // Implement edit user logic
+  const handleEditUser = (user) => {
+    setEditingUser(user); // Set the user to be edited
   };
 
-  const handleDeleteUser = (id) => {
+  const handleRoleUpdated = (id, newRole) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user._id === id ? { ...user, role: newRole } : user
+      )
+    );
+  };
+
+  const handleDeleteUser = async (id) => {
     console.log(`Delete user with ID: ${id}`);
-    // Implement delete user logic
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.patch(
+        `http://localhost:8888/api/user/deleteUser/${id}`,
+        {}, // Make sure the request body is not null
+        {
+          headers: {
+            authorization: ` ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(`User with ID: ${id} successfully deactivated`);
+        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
+      } else {
+        console.error(`Failed to deactivate user: ${response.data.message}`);
+      }
+    } catch (error) {
+      console.error(
+        "Error deactivating user:",
+        error.response ? error.response.data : error.message
+      );
+    }
   };
 
   const handleNextPage = () => {
@@ -86,27 +128,29 @@ const Admin = () => {
               <th className="p-4 pl-20">Email</th>
               <th className="p-4 pl-20">Phone</th>
               <th className="p-4 pl-20">Role</th>
+              <th className="p-4 pl-20">Status</th>
               <th className="p-4 pl-20">Actions</th>
             </tr>
           </thead>
           <tbody>
             {currentUsers.map((user, index) => (
               <tr
-                key={user.id}
+                key={user._id}
                 className="border-b border-gray-700 hover:bg-gray-700 cursor-pointer"
                 onClick={() => handleViewDetails(user)}
               >
                 <td className="p-4">{indexOfFirstUser + index + 1}</td>{" "}
                 {/* Display user number */}
-                <td className="p-4">{`${user.firstName} ${user.lastName}`}</td>
+                <td className="p-4">{`${user.firstname} ${user.lastname}`}</td>
                 <td className="p-4">{user.email}</td>
-                <td className="p-4">{user.phone}</td>
+                <td className="p-4">{user.phoneNumber}</td>
                 <td className="p-4">{user.role}</td>
+                <td className="p-4">{user.status}</td>
                 <td className="p-4">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleEditUser(user.id);
+                      handleEditUser(user);
                     }}
                     className="bg-lime-600 hover:bg-lime-500 text-white py-1 px-3 rounded-lg mr-2"
                   >
@@ -115,11 +159,11 @@ const Admin = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleDeleteUser(user.id);
+                      handleDeleteUser(user._id);
                     }}
                     className="bg-rose-800 hover:bg-rose-500 text-white py-1 px-3 rounded-lg"
                   >
-                    Remove
+                    deactivate
                   </button>
                 </td>
               </tr>
@@ -148,6 +192,13 @@ const Admin = () => {
       </div>
       {selectedUser && (
         <UserDetailPopup user={selectedUser} onClose={handleClosePopup} />
+      )}
+      {editingUser && (
+        <EditRolePopup
+          user={editingUser}
+          onClose={handleClosePopup}
+          onRoleUpdated={handleRoleUpdated}
+        />
       )}
     </div>
   );

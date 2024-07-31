@@ -93,9 +93,7 @@ const authController = {
       res.status(200).json({
         status: "success",
         token,
-        data: {
-          user,
-        },
+        user,
         message: "Login successfully",
       });
     } catch (error) {
@@ -114,7 +112,9 @@ const authController = {
       });
 
       // response
-      res.status(200).json({ status: "success" });
+      res
+        .status(200)
+        .json({ status: "success", message: "logged out successfully" });
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -168,19 +168,47 @@ const authController = {
       });
     }
   },
+  otpVerification: async (req, res, next) => {
+    try {
+      const { email, otp } = req.body;
+
+      const user = await User.findOne({ email });
+
+      if (
+        !user ||
+        user.passwordResetOtp !== otp ||
+        user.passwordResetExpires < Date.now()
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid or expired OTP. Please request a new OTP.",
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: "OTP verified successfully.",
+      });
+    } catch (error) {
+      console.error("Error in otpVerification:", error);
+      res.status(500).json({
+        success: false,
+        message: "An error occurred while verifying the OTP.",
+        error: error.message,
+      });
+    }
+  },
 
   resetPassword: async (req, res, next) => {
     try {
       // Get the email , otp and password
       const { email, otp, password, passwordConfirm } = req.body;
 
+      console.log("otp", otp);
+
       const user = await User.findOne({ email });
       console.log("user", user);
-      if (
-        !user ||
-        user.passwordResetOtp !== otp ||
-        user.passwordResetExpires < Date.now()
-      ) {
+      if (!user || user.passwordResetOtp !== otp) {
         return res.status(400).json({
           success: false,
           message: "Invalid or expired OTP. Please request a new OTP.",

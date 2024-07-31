@@ -8,6 +8,7 @@ import Otp from "./component/Otp";
 import NewPassword from "./component/NewPassword";
 import Profile from "./component/Profile";
 import Admin from "./component/Admin";
+import ProtectedRoute from "./component/ProtectedRoute";
 
 function App() {
   return (
@@ -20,8 +21,15 @@ function App() {
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/getOtp" element={<Otp />} />
           <Route path="/newPassword" element={<NewPassword />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/profile" element={<Profile role="admin" />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute role="admin">
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </Router>

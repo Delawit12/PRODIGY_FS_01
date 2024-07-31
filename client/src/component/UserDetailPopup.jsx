@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import profileImg from "../../public/images.png";
 
 const UserDetailPopup = ({ user, onClose }) => {
   return (
@@ -14,14 +15,14 @@ const UserDetailPopup = ({ user, onClose }) => {
         </button>
         <div className="text-center mb-4">
           <img
-            src={user.profilePic}
-            alt={`${user.firstName} ${user.lastName}`}
+            src={user.profilePic || profileImg}
+            alt={`${user.firstname} ${user.lastname}`}
             className="w-24 h-24 rounded-full mx-auto mb-4"
           />
-          <h2 className="text-2xl font-bold">{`${user.firstName} ${user.lastName}`}</h2>
+          <h2 className="text-2xl font-bold">{`${user.firstname} ${user.lastname}`}</h2>
           <p className="text-sm text-gray-400">{user.email}</p>
           <p className="text-sm text-gray-400">{user.phone}</p>
-          <p className="text-sm text-gray-400">{user.role}</p>
+          <p className="text-sm text-gray-400">{user.username}</p>
         </div>
       </div>
     </div>

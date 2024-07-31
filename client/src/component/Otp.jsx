@@ -1,9 +1,14 @@
 import { useState, useRef } from "react";
 import enterOtp from "../../public/Enter OTP-amico.svg";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 
 const GetOTP = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const inputRefs = useRef([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const email = location.state?.email; // Get email from location state
 
   const handleChange = (element, index) => {
     const value = element.value.replace(/[^0-9]/g, ""); // Ensure only numbers are entered
@@ -17,11 +22,23 @@ const GetOTP = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const otpValue = otp.join("");
-    // Implement OTP verification logic here
-    // On successful OTP verification, redirect to new password page
+    console.log(email, "email");
+    try {
+      const response = await axios.post(
+        "http://localhost:8888/api/user/confirmOtp",
+        { email, otp: otpValue } // Include email in the request body
+      );
+      if (response.status === 200) {
+        navigate("/newPassword", { state: { email, otp: otpValue } }); // Navigate to new password page with state
+      } else {
+        // Handle error
+      }
+    } catch (err) {
+      console.error("An error occurred during OTP verification:", err);
+    }
   };
 
   return (
@@ -34,7 +51,7 @@ const GetOTP = () => {
           <p className="text-sm text-gray-400 mb-3">
             An OTP has been sent to your email. Please enter it below.
           </p>
-          <form onSubmit={handleSubmit} className="space-y-4 w-full">
+          <form className="space-y-4 w-full" onSubmit={handleSubmit}>
             <div className="flex space-x-2 justify-center">
               {otp.map((data, index) => (
                 <input
@@ -45,7 +62,7 @@ const GetOTP = () => {
                   value={data}
                   onChange={(e) => handleChange(e.target, index)}
                   ref={(el) => (inputRefs.current[index] = el)}
-                  className="w-12 h-12 text-center rounded-md border border-gray-300 bg-black text-gray-100 "
+                  className="w-12 h-12 text-center rounded-md border border-gray-300 bg-black text-gray-100"
                   required
                 />
               ))}
@@ -61,7 +78,7 @@ const GetOTP = () => {
         <div className="hidden md:block md:w-1/2">
           <img
             src={enterOtp}
-            alt="Password Recovery Illustration"
+            alt="OTP Illustration"
             className="object-cover w-3/4 h-full rounded-r-lg"
           />
         </div>
