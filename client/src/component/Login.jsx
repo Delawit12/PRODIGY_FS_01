@@ -1,6 +1,6 @@
 import { useState } from "react";
 import loginImage from "../../public/Mobile login-cuate.svg"; // Replace with your actual image path
-import axios from "axios"; // Import axios for making API calls
+import axios from "../utils/axios"; // Import axios for making API calls
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,13 +13,10 @@ const Login = () => {
     setLoading(true); // Set loading to true before making the API call
 
     try {
-      const response = await axios.post(
-        "http://localhost:8888/api/user/login",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post("api/user/login", {
+        email,
+        password,
+      });
 
       // Handle the successful login response
       console.log("Login successful:", response.data);
@@ -35,6 +32,7 @@ const Login = () => {
       window.location.href = "/profile";
     } catch (error) {
       setLoading(false);
+      console.log(error);
       // Handle errors
       if (error.response && error.response.data) {
         setError(error.response.data.message);
