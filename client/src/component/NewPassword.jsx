@@ -1,7 +1,7 @@
 import { useState } from "react";
 import newPasswordImg from "../../public/Reset password-cuate (1).svg";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/axios";
 
 const NewPassword = () => {
   const [password, setPassword] = useState("");
@@ -19,10 +19,12 @@ const NewPassword = () => {
       return;
     }
     try {
-      const response = await axios.put(
-        "http://localhost:8888/api/user/resetPassword",
-        { email, otp, password, passwordConfirm: confirmPassword }
-      );
+      const response = await axios.put("api/user/resetPassword", {
+        email,
+        otp,
+        password,
+        passwordConfirm: confirmPassword,
+      });
       if (response.status === 200) {
         navigate("/login"); // Redirect to login page
       } else {

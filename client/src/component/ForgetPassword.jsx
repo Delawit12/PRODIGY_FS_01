@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
 import forgetPasswordImg from "../../public/Forgot password-pana.svg";
 
@@ -12,10 +12,7 @@ const ForgetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8888/api/user/forgetPassword",
-        { email }
-      );
+      const response = await axios.post("api/user/forgetPassword", { email });
       if (response.status === 200) {
         setMessage("OTP sent to email!");
         setError("");

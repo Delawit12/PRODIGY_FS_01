@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import enterOtp from "../../public/Enter OTP-amico.svg";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/axios";
 
 const GetOTP = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
@@ -28,7 +28,7 @@ const GetOTP = () => {
     console.log(email, "email");
     try {
       const response = await axios.post(
-        "http://localhost:8888/api/user/confirmOtp",
+        "api/user/confirmOtp",
         { email, otp: otpValue } // Include email in the request body
       );
       if (response.status === 200) {

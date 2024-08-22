@@ -1,6 +1,6 @@
 // EditRolePopup.js
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../utils/axios";
 
 const EditRolePopup = ({ users, user, onClose, onRoleUpdated }) => {
   const [role, setRole] = useState(user.role);
@@ -14,7 +14,7 @@ const EditRolePopup = ({ users, user, onClose, onRoleUpdated }) => {
       const token = localStorage.getItem("token");
       const user = localStorage.getItem("user");
       const response = await axios.patch(
-        `http://localhost:8888/api/user/updateUser/${params}`,
+        `api/user/updateUser/${params}`,
         { role },
         {
           headers: {

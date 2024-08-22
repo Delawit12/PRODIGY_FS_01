@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SignupImage from "../../public/Mobile login-pana (2).svg"; // Adjust path based on your project structure
+import axios from "../utils/axios";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -25,12 +26,8 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(" http://localhost:8888/api/user/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const response = await axios.post("api/user/signup", {
+        formData,
       });
 
       if (!response.ok) {

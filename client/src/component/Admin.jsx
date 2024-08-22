@@ -4,7 +4,7 @@ import Header from "./Header";
 import UserDetailPopup from "./UserDetailPopup";
 import EditRolePopup from "./EditRolePopup"; // Import EditRolePopup
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Import FontAwesome icons
-import axios from "axios";
+import axios from "../utils/axios";
 import { Navigate } from "react-router-dom";
 
 const Admin = () => {
@@ -25,14 +25,11 @@ const Admin = () => {
         return;
       }
       try {
-        const response = await axios.get(
-          "http://localhost:8888/api/user/getAllUser",
-          {
-            headers: {
-              authorization: `${token}`,
-            },
-          }
-        );
+        const response = await axios.get("api/user/getAllUser", {
+          headers: {
+            authorization: `${token}`,
+          },
+        });
         if (response.status === 200) {
           setUsers(response.data.users);
         } else {
@@ -76,7 +73,7 @@ const Admin = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.patch(
-        `http://localhost:8888/api/user/deleteUser/${id}`,
+        `api/user/deleteUser/${id}`,
         {}, // Make sure the request body is not null
         {
           headers: {
