@@ -1,12 +1,12 @@
 // import mongoose from "mongoose";
 const mongoose = require("mongoose");
 
-const { DB_URL_LOCAL, DATABASE } = require("./secrets.js");
+const { MONGODB_URI } = require("./secrets.js");
 
 const connection = async () => {
   try {
     // console.log(DATABASE);
-    const conn = await mongoose.connect(DB_URL_LOCAL);
+    const conn = await mongoose.connect(MONGODB_URI);
     // console.log(conn);
     console.log("DB connection successful !!!");
   } catch (error) {

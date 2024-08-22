@@ -6,6 +6,7 @@ const SERVER_HOST = process.env.SERVER_HOST;
 const SERVER_PORT = process.env.SERVER_PORT;
 const DB_URL_LOCAL = process.env.DB_URL_LOCAL;
 const DATABASE = process.env.DATABASE;
+const MONGODB_URI = process.env.MONGODB_URI;
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const EMAIL = process.env.EMAIL;
@@ -19,4 +20,5 @@ module.exports = {
   EMAIL,
   EMAIL_PASSWORD,
   DATABASE,
+  MONGODB_URI,
 };

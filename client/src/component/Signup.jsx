@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SignupImage from "../../public/Mobile login-pana (2).svg"; // Adjust path based on your project structure
 
 const Signup = () => {
@@ -13,6 +13,7 @@ const Signup = () => {
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -39,9 +40,11 @@ const Signup = () => {
       const result = await response.json();
       console.log(result);
       setSuccess(true);
+      navigate("/login");
       setError(null);
     } catch (error) {
-      console.error(error);
+      console.log(error.response);
+      console.error(error.message);
       setError(error.message);
     }
   };

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import logo from "../../public/Welcome-cuate-removebg-preview.png";
 import "../home.css"; // Adjust the path to your CSS file
 
 const Home = () => {
@@ -11,7 +12,7 @@ const Home = () => {
       <header className="text-center mb-8 relative z-10">
         <div className="logo-container">
           <img
-            src="../../public/Welcome-cuate-removebg-preview.png"
+            src={logo}
             alt="Your Logo"
             className=" w-48 mx-auto transition-transform transform hover:scale-110 duration-300"
           />
