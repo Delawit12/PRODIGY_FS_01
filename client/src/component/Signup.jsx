@@ -12,6 +12,7 @@ const Signup = () => {
     phoneNumber: "",
     password: "",
   });
+  // console.log("formData", formData);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
@@ -26,16 +27,23 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const { firstname, lastname, username, email, phoneNumber, password } =
+        formData;
       const response = await axios.post("api/user/signup", {
-        formData,
+        firstname,
+        lastname,
+        username,
+        email,
+        phoneNumber,
+        password,
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("Failed to register user");
       }
 
-      const result = await response.json();
-      console.log(result);
+      const result = await response.data.data.user;
+
       setSuccess(true);
       navigate("/login");
       setError(null);

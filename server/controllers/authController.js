@@ -6,7 +6,7 @@ const Email = require("../utils/email.js");
 // const crypto =require("crypto");
 const authController = {
   signup: async (req, res, next) => {
-    console.log(req.body);
+    // console.log("req.body", req.body);
     try {
       const {
         firstname,
@@ -17,6 +17,7 @@ const authController = {
         phoneNumber,
         address,
       } = req.body;
+
       const newUser = await User.create({
         firstname: firstname,
         lastname: lastname,
